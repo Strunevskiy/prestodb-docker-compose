@@ -2,58 +2,61 @@ version: '3'
 
 services:
   coordinator:
-    image: ahanaio/prestodb-sandbox
+    image: prestodb
     ports:
       - "8080:8080"
     container_name: "coordinator"
     volumes:
-      - ./config.properties:/opt/presto-server/etc/config.properties
-      - ./local_postgres.properties:/opt/presto-server/etc/catalog/local_postgres.properties
-    
-  worker:
-    image: ahanaio/prestodb-sandbox
+      - ./config.properties:/opt/presto/etc/config.properties
+      - ./mysql_one.properties:/opt/presto/etc/catalog/mysql_one.properties
+      - ./mysql_two.properties:/opt/presto/etc/catalog/mysql_two.properties
+    depends_on:
+      - mysql_one
+      - mysql_two
+
+  worker_zero:
+    image: prestodb
     container_name: "worker0"
     ports:
       - "8083:8083"
     volumes:
-      - ./worker/config.properties:/opt/presto-server/etc/config.properties
-    depends_on:
-      - coordinator
-  workerone:
-    image: ahanaio/prestodb-sandbox
-    container_name: "worker1"
-    ports:
-      - "8084:8084"
-    volumes:
-      - ./worker1/config.properties:/opt/presto-server/etc/config.properties
-    depends_on:
-      - coordinator
-  workertwo:
-    image: ahanaio/prestodb-sandbox
-    container_name: "worker2"
-    ports:
-      - "8085:8085"
-    volumes:
-      - ./worker3/config.properties:/opt/presto-server/etc/config.properties
+      - ./worker0/config.properties:/opt/presto/etc/config.properties
+      - ./mysql_one.properties:/opt/presto/etc/catalog/mysql_one.properties
+      - ./mysql_two.properties:/opt/presto/etc/catalog/mysql_two.properties
     depends_on:
       - coordinator
 
-  workerthree:
-    image: ahanaio/prestodb-sandbox
-    container_name: "worker3"
+  mysql_one:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'user'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
     ports:
-      - "8092:8092"
-    volumes:
-      - ./worker4/config.properties:/opt/presto-server/etc/config.properties
-    depends_on:
-      - coordinator
-      
-  workerfour:
-    image: ahanaio/prestodb-sandbox
-    container_name: "worker4"
+      # <Port exposed> : <MySQL Port running inside container>
+      - '3309:3309'
+    expose:
+      # Opens port 3309 on the container
+      - '3309'
+  mysql_two:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'user'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
     ports:
-      - "8093:8093"
-    volumes:
-      - ./worker5/config.properties:/opt/presto-server/etc/config.properties
-    depends_on:
-      - coordinator
+      # <Port exposed> : <MySQL Port running inside container>
+      - '3310:3310'
+    expose:
+      # Opens port 3310 on the container
+      - '3310'
