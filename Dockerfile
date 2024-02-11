@@ -7,6 +7,7 @@ ARG PRESTO_BIN=https://repo1.maven.org/maven2/com/facebook/presto/presto-server/
 ##Update OS and Dependencies##
 #USER root
 RUN dnf install -y java-11-openjdk less procps python3 \
+    && dnf install wget \
     && ln -s $(which python3) /usr/bin/python \
     && mv /etc/yum/protected.d/systemd.conf /etc/yum/protected.d/systemd.conf.bak \
     && dnf clean all
