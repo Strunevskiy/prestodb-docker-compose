@@ -6,10 +6,10 @@ ARG PRESTO_BIN=https://repo1.maven.org/maven2/com/facebook/presto/presto-server/
 
 ##Update OS and Dependencies##
 #USER root
-RUN yum update -y &&\
-    yum install -y wget ca-certificates tar less\
-    yum install -y java-1.8.0-openjdk\
-    yum clean all
+RUN dnf update -y &&\
+    dnf install -y wget ca-certificates tar less\
+    dnf install -y java-1.8.0-openjdk\
+    dnf clean all
 
 RUN wget --quiet ${PRESTO_BIN}
 RUN mkdir -p /opt
