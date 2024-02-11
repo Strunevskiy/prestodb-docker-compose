@@ -6,10 +6,10 @@ ARG PRESTO_BIN=https://repo1.maven.org/maven2/com/facebook/presto/presto-server/
 
 ##Update OS and Dependencies##
 #USER root
-RUN dnf update -y &&\
-    dnf install -y wget ca-certificates tar less\
-    dnf install -y java-1.8.0-openjdk\
-    dnf clean all
+RUN dnf install -y java-11-openjdk less procps python3 \
+    && ln -s $(which python3) /usr/bin/python \
+    && mv /etc/yum/protected.d/systemd.conf /etc/yum/protected.d/systemd.conf.bak \
+    && dnf clean all
 
 RUN wget --quiet ${PRESTO_BIN}
 RUN mkdir -p /opt
