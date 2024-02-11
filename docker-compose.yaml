@@ -2,27 +2,39 @@ version: '3'
 
 services:
   coordinator:
-    image: prestodb
+    image: prestodb/presto
     ports:
       - "8080:8080"
     container_name: "coordinator"
     volumes:
-      - ./config.properties:/opt/presto/etc/config.properties
-      - ./mysql_one.properties:/opt/presto/etc/catalog/mysql_one.properties
-      - ./mysql_two.properties:/opt/presto/etc/catalog/mysql_two.properties
+      - ./config.properties:/opt/presto-serve/etc/config.properties
+      - ./mysql_one.properties:/opt/presto-serve/etc/catalog/mysql_one.properties
+      - ./mysql_two.properties:/opt/presto-serve/etc/catalog/mysql_two.properties
     depends_on:
       - mysql_one
       - mysql_two
 
   worker_zero:
-    image: prestodb
+    image: prestodb/presto
     container_name: "worker0"
     ports:
       - "8083:8083"
     volumes:
-      - ./worker0/config.properties:/opt/presto/etc/config.properties
-      - ./mysql_one.properties:/opt/presto/etc/catalog/mysql_one.properties
-      - ./mysql_two.properties:/opt/presto/etc/catalog/mysql_two.properties
+      - ./worker0/config.properties:/opt/presto-serve/etc/config.properties
+      - ./mysql_one.properties:/opt/presto-serve/etc/catalog/mysql_one.properties
+      - ./mysql_two.properties:/opt/presto-serve/etc/catalog/mysql_two.properties
+    depends_on:
+      - coordinator
+
+  worker_one:
+    image: prestodb/presto
+    container_name: "worker1"
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./worker1/config.properties:/opt/presto-serve/etc/config.properties
+      - ./mysql_one.properties:/opt/presto-serve/etc/catalog/mysql_one.properties
+      - ./mysql_two.properties:/opt/presto-serve/etc/catalog/mysql_two.properties
     depends_on:
       - coordinator
 
