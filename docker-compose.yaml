@@ -26,18 +26,6 @@ services:
     depends_on:
       - coordinator
 
-  worker_one:
-    image: prestodb/presto
-    container_name: "worker1"
-    ports:
-      - "8083:8083"
-    volumes:
-      - ./worker1/config.properties:/opt/presto-serve/etc/config.properties
-      - ./mysql_one.properties:/opt/presto-serve/etc/catalog/mysql_one.properties
-      - ./mysql_two.properties:/opt/presto-serve/etc/catalog/mysql_two.properties
-    depends_on:
-      - coordinator
-
   mysql_one:
     image: mysql:5.7
     restart: always
