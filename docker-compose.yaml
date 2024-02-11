@@ -7,9 +7,10 @@ services:
       - "8080:8080"
     container_name: "coordinator"
     volumes:
-      - ./config.properties:/opt/presto-serve/etc/config.properties
-      - ./mysql_one.properties:/opt/presto-serve/etc/catalog/mysql_one.properties
-      - ./mysql_two.properties:/opt/presto-serve/etc/catalog/mysql_two.properties
+      - ./config.properties:/opt/presto-server/etc/config.properties
+      - ./jvm.config:/opt/presto-server/etc/jvm.config
+      - ./mysql_one.properties:/opt/presto-server/etc/catalog/mysql_one.properties
+      - ./mysql_two.properties:/opt/presto-server/etc/catalog/mysql_two.properties
     depends_on:
       - mysql_one
       - mysql_two
@@ -25,6 +26,7 @@ services:
       MYSQL_PASSWORD: 'password'
       # Password for root access
       MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_TCP_PORT: 3309
     ports:
       # <Port exposed> : <MySQL Port running inside container>
       - '3309:3309'
@@ -42,6 +44,7 @@ services:
       MYSQL_PASSWORD: 'password'
       # Password for root access
       MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_TCP_PORT: 3310
     ports:
       # <Port exposed> : <MySQL Port running inside container>
       - '3310:3310'
