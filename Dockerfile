@@ -1,4 +1,4 @@
-FROM   centos:7
+FROM quay.io/centos/centos:stream8
 
 # Presto version will be passed in at build time
 ARG PRESTO_VERSION
@@ -6,12 +6,8 @@ ARG PRESTO_BIN=https://repo1.maven.org/maven2/com/facebook/presto/presto-server/
 
 ##Update OS and Dependencies##
 #USER root
-#RUN yum update -y &&\
-#    yum install -y wget ca-certificates tar less\
-#    yum install -y java-1.8.0-openjdk\
-#    yum clean all
-
-RUN yum install -y wget ca-certificates tar less\
+RUN yum update -y &&\
+    yum install -y wget ca-certificates tar less\
     yum install -y java-1.8.0-openjdk\
     yum clean all
 
